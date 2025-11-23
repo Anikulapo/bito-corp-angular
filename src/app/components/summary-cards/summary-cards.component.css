@@ -1,0 +1,56 @@
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.summary-card {
+  background: var(--card-bg);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  border: 1px solid var(--border-color);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.card-label {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.time-dropdown {
+  background: var(--accent-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 0.25rem;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.time-dropdown:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+}
+
+.card-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+}
+
+@media (min-width: 768px) {
+  .summary-cards {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+

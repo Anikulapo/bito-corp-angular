@@ -1,0 +1,135 @@
+@if (invoice) {
+  <div class="invoice-detail-container">
+    <button class="back-button" (click)="goBack()" type="button">
+      <svg width="7" height="10" viewBox="0 0 7 10" fill="none">
+        <path d="M6 1L2 5L6 9" stroke="currentColor" stroke-width="2"/>
+      </svg>
+      <span>Go back</span>
+    </button>
+
+    <div class="invoice-header">
+      <div class="invoice-header-left">
+        <span class="status-label">Status</span>
+        <span class="status-badge" [class]="getStatusColor(invoice.status)">
+          {{ invoice.status }}
+        </span>
+      </div>
+      <div class="invoice-header-right">
+        <button class="btn-edit" (click)="openEditModal()" type="button">
+          Edit
+        </button>
+        <button class="btn-delete" (click)="showDeleteConfirm.set(true)" type="button">
+          Delete
+        </button>
+        @if (invoice.status !== 'paid') {
+          <button class="btn-mark-paid" (click)="markAsPaid()" type="button">
+            Mark as Paid
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="invoice-content">
+      <div class="invoice-info">
+        <div class="invoice-id-section">
+          <div>
+            <span class="invoice-id">#{{ invoice.id }}</span>
+            <p class="invoice-description">{{ invoice.description }}</p>
+          </div>
+          <div class="sender-address">
+            <p>{{ invoice.senderAddress.street }}</p>
+            <p>{{ invoice.senderAddress.city }}</p>
+            <p>{{ invoice.senderAddress.postCode }}</p>
+            <p>{{ invoice.senderAddress.country }}</p>
+          </div>
+        </div>
+
+        <div class="invoice-dates">
+          <div class="date-group">
+            <p class="date-label">Invoice Date</p>
+            <p class="date-value">{{ formatDate(invoice.createdAt) }}</p>
+          </div>
+          <div class="date-group">
+            <p class="date-label">Payment Due</p>
+            <p class="date-value">{{ formatDate(invoice.paymentDue) }}</p>
+          </div>
+          <div class="date-group">
+            <p class="date-label">Bill To</p>
+            <p class="client-name">{{ invoice.clientName }}</p>
+            <div class="client-address">
+              <p>{{ invoice.clientAddress.street }}</p>
+              <p>{{ invoice.clientAddress.city }}</p>
+              <p>{{ invoice.clientAddress.postCode }}</p>
+              <p>{{ invoice.clientAddress.country }}</p>
+            </div>
+          </div>
+          <div class="date-group">
+            <p class="date-label">Sent to</p>
+            <p class="client-email">{{ invoice.clientEmail }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="invoice-items">
+        <div class="items-table">
+          <div class="items-header">
+            <div class="item-name">Item Name</div>
+            <div class="item-qty">QTY.</div>
+            <div class="item-price">Price</div>
+            <div class="item-total">Total</div>
+          </div>
+          @for (item of invoice.items; track item.id) {
+            <div class="items-row">
+              <div class="item-name">{{ item.name }}</div>
+              <div class="item-qty">{{ item.quantity }}</div>
+              <div class="item-price">£{{ item.price | number: '1.2-2' }}</div>
+              <div class="item-total">£{{ item.total | number: '1.2-2' }}</div>
+            </div>
+          }
+        </div>
+        <div class="invoice-total-section">
+          <div class="total-row">
+            <span class="total-label">Amount Due</span>
+            <span class="total-amount">£{{ invoice.total | number: '1.2-2' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if (showModal()) {
+    <app-invoice-modal
+      [invoice]="invoice"
+      (close)="closeModal()"
+      (saved)="onInvoiceSaved()"
+    />
+  }
+
+  @if (showDeleteConfirm()) {
+    <div class="delete-modal-backdrop" (click)="showDeleteConfirm.set(false)">
+      <div class="delete-modal" (click)="$event.stopPropagation()">
+        <h3 class="delete-modal-title">Confirm Deletion</h3>
+        <p class="delete-modal-text">
+          Are you sure you want to delete invoice #{{ invoice.id }}? This action cannot be undone.
+        </p>
+        <div class="delete-modal-actions">
+          <button 
+            type="button" 
+            class="btn-cancel" 
+            (click)="showDeleteConfirm.set(false)"
+          >
+            Cancel
+          </button>
+          <button 
+            type="button" 
+            class="btn-delete-confirm" 
+            (click)="deleteInvoice()"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+}
+

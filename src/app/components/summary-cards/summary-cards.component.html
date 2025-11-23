@@ -1,0 +1,36 @@
+<div class="summary-cards">
+  <div class="summary-card">
+    <div class="card-header">
+      <span class="card-label">Overdue</span>
+    </div>
+    <div class="card-value">${{ overdueAmount() | number: '1.2-2' }} USD</div>
+  </div>
+
+  <div class="summary-card">
+    <div class="card-header">
+      <span class="card-label">Total outstanding</span>
+    </div>
+    <div class="card-value">${{ totalOutstanding() | number: '1.2-2' }} USD</div>
+  </div>
+
+  <div class="summary-card">
+    <div class="card-header">
+      <span class="card-label">Get paid</span>
+    </div>
+    <div class="card-value">${{ getPaidAmount() | number: '1.2-2' }} USD</div>
+  </div>
+
+  <div class="summary-card">
+    <div class="card-header">
+      <span class="card-label">Uncollectible</span>
+      <select class="time-dropdown">
+        <option>Last Month</option>
+        <option>Last 3 Months</option>
+        <option>Last 6 Months</option>
+        <option>Last Year</option>
+      </select>
+    </div>
+    <div class="card-value">${{ uncollectibleAmount() | number: '1.2-2' }} USD</div>
+  </div>
+</div>
+

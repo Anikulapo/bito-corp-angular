@@ -1,0 +1,189 @@
+<app-navigation />
+
+<div class="dashboard-container">
+  <app-summary-cards />
+
+  <div class="invoice-section">
+    <!-- Tabs -->
+    <div class="tabs">
+      <button
+        class="tab"
+        [class.active]="selectedTab() === 'invoices'"
+        (click)="onTabChange('invoices')"
+      >
+        Invoices
+      </button>
+      <button
+        class="tab"
+        [class.active]="selectedTab() === 'draft'"
+        (click)="onTabChange('draft')"
+      >
+        Draft
+      </button>
+    </div>
+
+    <!-- Filter Categories -->
+    <div class="filter-categories">
+      <button
+        class="filter-category"
+        [class.active]="selectedFilter() === 'all'"
+        (click)="onFilterChange('all')"
+      >
+        All ({{ filterCounts().all }})
+      </button>
+      <button
+        class="filter-category"
+        [class.active]="selectedFilter() === 'outstanding'"
+        (click)="onFilterChange('outstanding')"
+      >
+        Outstanding ({{ filterCounts().outstanding }})
+      </button>
+      <button
+        class="filter-category"
+        [class.active]="selectedFilter() === 'paid'"
+        (click)="onFilterChange('paid')"
+      >
+        Paid ({{ filterCounts().paid }})
+      </button>
+      <button
+        class="filter-category"
+        [class.active]="selectedFilter() === 'uncollectible'"
+        (click)="onFilterChange('uncollectible')"
+      >
+        Uncollectible ({{ filterCounts().uncollectible }})
+      </button>
+    </div>
+
+    <!-- Action Bar -->
+    <div class="action-bar">
+      <div class="action-left">
+        <select class="action-dropdown">
+          <option>All clients</option>
+        </select>
+        <select class="action-dropdown">
+          <option>All Status</option>
+        </select>
+        <select class="action-dropdown">
+          <option>All Time</option>
+        </select>
+      </div>
+      <div class="action-right">
+        <button class="btn-new-invoice" (click)="openNewInvoiceModal()">
+          + New Invoice
+        </button>
+        <div class="search-container">
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M7 12C9.76142 12 12 9.76142 12 7C12 4.23858 9.76142 2 7 2C4.23858 2 2 4.23858 2 7C2 9.76142 4.23858 12 7 12Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Try invoice# or client name"
+            [value]="searchQuery()"
+            (input)="searchQuery.set($any($event.target).value); currentPage.set(1)"
+          />
+        </div>
+        <select class="sort-dropdown">
+          <option>Sort by: Invoice#</option>
+          <option>Sort by: Date</option>
+          <option>Sort by: Client</option>
+          <option>Sort by: Total</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Invoice Table -->
+    @if (filteredInvoices().length === 0) {
+      <app-empty-state />
+    } @else {
+      <div class="table-container">
+        <table class="invoice-table">
+          <thead>
+            <tr>
+              <th class="checkbox-col">
+                <input
+                  type="checkbox"
+                  [checked]="selectedInvoices().size === paginatedInvoices().length && paginatedInvoices().length > 0"
+                  (change)="toggleSelectAll()"
+                  class="checkbox"
+                />
+              </th>
+              <th>Invoice#</th>
+              <th>Invoice Date</th>
+              <th>Client</th>
+              <th>Status</th>
+              <th>Due Date</th>
+              <th>Total</th>
+              <th>Amount Due</th>
+              <th class="actions-col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (invoice of paginatedInvoices(); track invoice.id) {
+              <tr class="invoice-row" (click)="navigateToInvoice(invoice.id)">
+                <td class="checkbox-col" (click)="$event.stopPropagation()">
+                  <input
+                    type="checkbox"
+                    [checked]="selectedInvoices().has(invoice.id)"
+                    (change)="toggleSelectInvoice(invoice.id)"
+                    class="checkbox"
+                  />
+                </td>
+                <td class="invoice-number">
+                  <a (click)="$event.stopPropagation(); navigateToInvoice(invoice.id)">{{ invoice.id }}</a>
+                </td>
+                <td>{{ formatDate(invoice.createdAt) }}</td>
+                <td>{{ invoice.clientName }}</td>
+                <td>
+                  <span class="status-badge" [class]="getStatusClass(getDisplayStatus(invoice))">
+                    <span class="status-dot"></span>
+                    {{ getDisplayStatus(invoice) }}
+                  </span>
+                </td>
+                <td>{{ formatDate(invoice.paymentDue) }}</td>
+                <td>${{ invoice.total | number: '1.2-2' }}</td>
+                <td>${{ getAmountDue(invoice) | number: '1.2-2' }}</td>
+                <td class="actions-col" (click)="$event.stopPropagation()">
+                  <button class="actions-button" type="button">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <circle cx="8" cy="3" r="1.5" fill="currentColor"/>
+                      <circle cx="8" cy="8" r="1.5" fill="currentColor"/>
+                      <circle cx="8" cy="13" r="1.5" fill="currentColor"/>
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination">
+        <div class="pagination-info">
+          Showing {{ itemsPerPage }} invoices per page
+        </div>
+        <div class="pagination-controls">
+          @for (page of [].constructor(totalPages()); track $index) {
+            <button
+              class="page-button"
+              [class.active]="currentPage() === $index + 1"
+              (click)="onPageChange($index + 1)"
+            >
+              {{ $index + 1 }}
+            </button>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+@if (showModal()) {
+  <app-invoice-modal
+    [invoice]="editingInvoice()"
+    (close)="closeModal()"
+    (saved)="onInvoiceSaved()"
+  />
+}

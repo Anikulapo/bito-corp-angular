@@ -1,0 +1,114 @@
+.filter-dropdown {
+  position: relative;
+}
+
+.filter-button {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: color 0.2s;
+}
+
+.filter-button:hover {
+  color: var(--accent-primary);
+}
+
+.filter-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filter-label-mobile {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .filter-label-mobile {
+    display: inline;
+  }
+}
+
+.chevron-icon {
+  transition: transform 0.2s;
+  color: var(--accent-primary);
+}
+
+.chevron-icon.rotated {
+  transform: rotate(180deg);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 1rem);
+  left: 0;
+  background: var(--card-bg);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+  min-width: 12rem;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8125rem;
+  cursor: pointer;
+  position: relative;
+}
+
+.checkbox-input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.checkbox-custom {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid var(--accent-primary);
+  border-radius: 2px;
+  background: var(--accent-secondary);
+  position: relative;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+.checkbox-input:checked + .checkbox-custom {
+  background: var(--accent-primary);
+}
+
+.checkbox-input:checked + .checkbox-custom::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 0.375rem;
+  height: 0.375rem;
+  background: white;
+  border-radius: 1px;
+}
+
+.filter-text {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-transform: capitalize;
+}
+
+.dropdown-item:hover .filter-text {
+  color: var(--accent-primary);
+}
+

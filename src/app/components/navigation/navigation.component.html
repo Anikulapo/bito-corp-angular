@@ -1,0 +1,23 @@
+<nav class="top-navigation">
+  <div class="nav-content">
+    <div class="nav-left">
+      <div class="logo">PayZen</div>
+      <div class="nav-links">
+        <a href="#" class="nav-link active" (click)="$event.preventDefault(); activeTab = 'invoices'">Invoices</a>
+        <a href="#" class="nav-link" (click)="$event.preventDefault(); activeTab = 'clients'">Clients</a>
+        <a href="#" class="nav-link" (click)="$event.preventDefault(); activeTab = 'service-items'">Service Items</a>
+      </div>
+    </div>
+    <div class="nav-right">
+      <button class="icon-button" type="button" aria-label="Notifications">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M10 2C8.9 2 8 2.9 8 4V5.58C6.4 6.5 5.5 8.3 5.5 10.3V15H4.5V17H15.5V15H14.5V10.3C14.5 8.3 13.6 6.5 12 5.58V4C12 2.9 11.1 2 10 2ZM10 3C10.6 3 11 3.4 11 4V5H9V4C9 3.4 9.4 3 10 3ZM6.5 10.3C6.5 8.6 7.6 7.1 9.2 6.7C9.1 6.8 9 6.9 9 7V8H11V7C11 6.9 10.9 6.8 10.8 6.7C12.4 7.1 13.5 8.6 13.5 10.3V15H6.5V10.3Z" fill="currentColor"/>
+        </svg>
+      </button>
+      <div class="user-profile">
+        <img src="https://via.placeholder.com/32" alt="User" class="profile-image">
+      </div>
+    </div>
+  </div>
+</nav>
+

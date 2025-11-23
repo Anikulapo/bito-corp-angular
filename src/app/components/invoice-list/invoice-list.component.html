@@ -1,0 +1,35 @@
+<div class="filter-dropdown">
+  <button class="filter-button" (click)="toggleDropdown()" type="button">
+    <span class="filter-label">
+      Filter <span class="filter-label-mobile">by status</span>
+    </span>
+    <svg 
+      class="chevron-icon" 
+      [class.rotated]="showDropdown"
+      width="11" 
+      height="7" 
+      viewBox="0 0 11 7" 
+      fill="none"
+    >
+      <path d="M1 1L5.5 5.5L10 1" stroke="currentColor" stroke-width="2"/>
+    </svg>
+  </button>
+  
+  @if (showDropdown) {
+    <div class="dropdown-menu">
+      @for (filter of filters; track filter.value) {
+        <label class="dropdown-item">
+          <input
+            type="checkbox"
+            [checked]="selectedFilter === filter.value"
+            (change)="selectFilter(filter.value)"
+            class="checkbox-input"
+          />
+          <span class="checkbox-custom"></span>
+          <span class="filter-text">{{ filter.label }}</span>
+        </label>
+      }
+    </div>
+  }
+</div>
+
