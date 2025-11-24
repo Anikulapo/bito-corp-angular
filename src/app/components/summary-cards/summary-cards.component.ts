@@ -20,7 +20,7 @@ export class SummaryCardsComponent {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         dueDate.setHours(0, 0, 0, 0);
-        return (inv.status === 'pending' || inv.status === 'draft') && dueDate < today && inv.status !== 'paid';
+        return (inv.status === 'pending' || inv.status === 'draft') && dueDate < today;
       })
       .reduce((sum, inv) => sum + inv.total, 0);
   });
